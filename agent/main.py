@@ -11,6 +11,7 @@ from collectors.zero_milano import collect_zero_milano
 from collectors.venues import collect_venues
 from normalizer import normalize_events, deduplicate
 from classifier import classify_genres
+from ranker import rank_events
 from html_generator import generate_html
 
 MILAN_TZ = pytz.timezone("Europe/Rome")
@@ -20,7 +21,17 @@ DATE_TO = (NOW + timedelta(days=30)).date()
 
 PERPLEXITY_API_KEY = os.environ.get("PERPLEXITY_API_KEY", "")
 
-EXCLUDED_GENRES = {"classica", "lirica", "opera", "dj set", "electronic dj", "djset", "dj"}
+# Generi target: jazz, blues, funk e sottogeneri
+TARGET_GENRES = {
+    "jazz", "blues", "funk", "soul", "r&b", "gospel",
+    "bebop", "swing", "bossa nova", "latin jazz", "acid jazz",
+    "smooth jazz", "free jazz", "jazz fusion", "fusion",
+    "rhythm and blues", "neo soul", "nu-jazz", "nu jazz",
+    "electric blues", "delta blues", "chicago blues",
+    "boogie", "groove",
+}
+
+TOP_N = 20  # eventi da selezionare
 
 OUTPUT_PATH = os.path.join(os.path.dirname(__file__), "..", "output", "agenda.html")
 
@@ -53,22 +64,36 @@ def main():
         print("[Classifier] Classificazione generi con Perplexity API...")
         events = classify_genres(events, PERPLEXITY_API_KEY)
     else:
-        print("[Classifier] Nessuna API key trovata, generi non classificati")
+        print("[Classifier] Nessuna API key, generi non classificati")
         for ev in events:
             ev["genre_tags"] = ["live music"]
 
-    filtered = []
+    # Filtra: tieni solo eventi con almeno un genere target
+    jazz_events = []
     for ev in events:
-        tags_lower = {t.lower() for t in ev.get("genre_tags", [])}
-        if tags_lower & EXCLUDED_GENRES:
-            continue
-        filtered.append(ev)
-    print(f"[Filter] Dopo filtro generi: {len(filtered)} eventi")
+        tags = {t.lower() for t in ev.get("genre_tags", [])}
+        if tags & TARGET_GENRES:
+            jazz_events.append(ev)
+    print(f"[Filter] Eventi jazz/blues/funk: {len(jazz_events)}")
 
-    filtered.sort(key=lambda e: e.get("start_datetime") or "")
+    if not jazz_events:
+        print("[Warning] Nessun evento trovato nei generi target. Uso tutti gli eventi.")
+        jazz_events = events
+
+    # Ranking con Perplexity: seleziona top 20
+    if PERPLEXITY_API_KEY and jazz_events:
+        print(f"[Ranker] Scoring e selezione top {TOP_N}...")
+        top_events = rank_events(jazz_events, PERPLEXITY_API_KEY, top_n=TOP_N)
+    else:
+        top_events = sorted(jazz_events, key=lambda e: e.get("start_datetime") or "")[:TOP_N]
+
+    print(f"[Ranker] Top {len(top_events)} eventi selezionati")
+
+    # Ordina per data
+    top_events.sort(key=lambda e: e.get("start_datetime") or "")
 
     print("[HTML] Generazione agenda.html...")
-    generate_html(filtered, OUTPUT_PATH, DATE_FROM, DATE_TO)
+    generate_html(top_events, OUTPUT_PATH, DATE_FROM, DATE_TO, top_n=TOP_N)
     print(f"[Done] Agenda salvata in: {OUTPUT_PATH}")
 
 
