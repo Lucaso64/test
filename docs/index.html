@@ -4,631 +4,462 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Musica Live - Provincia di Milano</title>
+<title>Top 20 Jazz Blues Funk - Milano</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', sans-serif; background: #0f0f0f; color: #f0f0f0; }
-  header { background: #1a1a2e; padding: 2rem; text-align: center; border-bottom: 2px solid #e94560; }
-  header h1 { font-size: 2rem; color: #e94560; }
-  header p { color: #aaa; margin-top: 0.5rem; }
-  .controls { padding: 1rem 2rem; background: #16213e; display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; }
-  .controls input, .controls select { padding: 0.5rem 1rem; border-radius: 6px; border: 1px solid #333; background: #0f3460; color: #fff; font-size: 0.9rem; }
-  .controls input { flex: 1; min-width: 200px; }
-  .stats { padding: 0.5rem 2rem; background: #0a0a1a; color: #888; font-size: 0.85rem; }
-  .events-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.2rem; padding: 1.5rem 2rem; }
-  .card { background: #1a1a2e; border-radius: 10px; padding: 1.2rem; border-left: 4px solid #e94560; transition: transform 0.2s; }
-  .card:hover { transform: translateY(-3px); }
-  .card-date { font-size: 0.8rem; color: #e94560; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.4rem; }
-  .card-title { font-size: 1.1rem; font-weight: bold; color: #fff; margin-bottom: 0.3rem; }
-  .card-artist { font-size: 0.9rem; color: #ccc; margin-bottom: 0.5rem; }
-  .card-venue { font-size: 0.85rem; color: #aaa; margin-bottom: 0.3rem; }
-  .card-address { font-size: 0.8rem; color: #888; margin-bottom: 0.7rem; }
-  .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.7rem; }
-  .tag { background: #0f3460; color: #53d8fb; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.75rem; }
-  .card-link { display: inline-block; padding: 0.3rem 0.8rem; background: #e94560; color: #fff; border-radius: 5px; text-decoration: none; font-size: 0.8rem; }
-  .card-link:hover { background: #c73652; }
+  body { font-family: 'Segoe UI', sans-serif; background: #0a0a0a; color: #f0f0f0; }
+  header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 2.5rem 2rem; text-align: center; border-bottom: 3px solid #f0a500; }
+  header h1 { font-size: 2.2rem; color: #f0a500; letter-spacing: 2px; }
+  header .subtitle { color: #aaa; margin-top: 0.6rem; font-size: 1rem; }
+  header .subtitle span { color: #f0a500; font-weight: bold; }
+  .search-bar { padding: 1.2rem 2rem; background: #111; display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; border-bottom: 1px solid #222; }
+  .search-bar input { flex: 1; min-width: 220px; padding: 0.6rem 1.2rem; border-radius: 25px; border: 1px solid #333; background: #1a1a2e; color: #fff; font-size: 0.9rem; outline: none; }
+  .search-bar input:focus { border-color: #f0a500; }
+  .stats { padding: 0.6rem 2rem; background: #0a0a0a; color: #666; font-size: 0.82rem; }
+  .events-list { max-width: 900px; margin: 0 auto; padding: 1.5rem 1.5rem; display: flex; flex-direction: column; gap: 1.4rem; }
+  .card { background: #111827; border-radius: 12px; padding: 1.5rem; border-left: 5px solid #f0a500; position: relative; transition: transform 0.2s, box-shadow 0.2s; }
+  .card:hover { transform: translateX(4px); box-shadow: -4px 0 20px rgba(240,165,0,0.15); }
+  .card-rank { position: absolute; top: 1.2rem; right: 1.2rem; background: #f0a500; color: #000; font-weight: bold; font-size: 0.85rem; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .card-score-bar { position: absolute; top: 0; left: 0; height: 3px; border-radius: 0 0 0 12px; background: linear-gradient(90deg, #f0a500, #ff6b35); }
+  .card-date { font-size: 0.78rem; color: #f0a500; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 0.5rem; }
+  .card-title { font-size: 1.25rem; font-weight: bold; color: #fff; margin-bottom: 0.3rem; padding-right: 2.5rem; }
+  .card-artist { font-size: 0.95rem; color: #d4a017; margin-bottom: 0.6rem; font-style: italic; }
+  .card-description { font-size: 0.9rem; color: #ccc; line-height: 1.6; margin-bottom: 0.9rem; border-left: 2px solid #333; padding-left: 0.8rem; }
+  .card-meta { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 0.8rem; font-size: 0.85rem; }
+  .card-venue { color: #9ca3af; }
+  .card-venue span { color: #e5e7eb; font-weight: 500; }
+  .card-address { color: #6b7280; }
+  .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.9rem; }
+  .tag { background: #1e3a5f; color: #60a5fa; padding: 0.2rem 0.7rem; border-radius: 20px; font-size: 0.75rem; font-weight: 500; }
+  .card-link { display: inline-block; padding: 0.4rem 1rem; background: transparent; color: #f0a500; border: 1px solid #f0a500; border-radius: 6px; text-decoration: none; font-size: 0.82rem; transition: all 0.2s; }
+  .card-link:hover { background: #f0a500; color: #000; }
   .hidden { display: none; }
-  footer { text-align: center; padding: 1.5rem; color: #555; font-size: 0.8rem; border-top: 1px solid #222; margin-top: 2rem; }
+  footer { text-align: center; padding: 2rem; color: #444; font-size: 0.78rem; border-top: 1px solid #1a1a1a; margin-top: 1rem; }
+  @media (max-width: 600px) { .events-list { padding: 1rem; } .card { padding: 1.2rem; } }
 </style>
 </head>
 <body>
 <header>
-  <h1>Musica Live - Provincia di Milano</h1>
-  <p>25/03/2026 &mdash; 24/04/2026 &nbsp;&bull;&nbsp; 57 eventi trovati</p>
+  <h1>Top 20 Jazz &bull; Blues &bull; Funk</h1>
+  <p class="subtitle">Provincia di Milano &nbsp;&bull;&nbsp; <span>30/03/2026</span> &mdash; <span>29/04/2026</span> &nbsp;&bull;&nbsp; Selezionati da <span>20</span> eventi</p>
 </header>
-<div class="controls">
+<div class="search-bar">
   <input type="text" id="search" placeholder="Cerca artista, locale, genere..." oninput="filterEvents()">
-  <select id="genre-filter" onchange="filterEvents()">
-    <option value="">Tutti i generi</option>
-    <option value="live music">live music</option>
-  </select>
 </div>
-<div class="stats" id="stats">Mostrando 57 eventi</div>
-<div class="events-grid" id="grid">
+<div class="stats" id="stats">Mostrando 20 eventi</div>
+<div class="events-list" id="list">
 
-  <div class="card" data-search="mille&amp;unaband semifinali @ barrio&#8217;s live mille&amp;unaband semifinali @ barrio&#8217;s live barrio&#8217;s live live music" data-genres="live music">
-    <div class="card-date">2026-01-04 &bull; ore 20:00</div>
+
+  <div class="card" data-search="mille&amp;unaband semifinali @ barrio&#8217;s live mille&amp;unaband semifinali @ barrio&#8217;s live barrio&#8217;s live live music &lt;p&gt;mille&amp;unaband · semifinali mercoledì 1 aprile 2026 · barrio\'s live · milano dalle 20:00 · ingresso libero si alza il livello. le migliori band della stagione si sfidano per un ...&lt;/p&gt;\n">
+    <div class="card-score-bar" style="width: 50%"></div>
+    <div class="card-rank">#1</div>
+    <div class="card-date">
+      2026-01-04 &bull; ore 20:00
+    </div>
     <div class="card-title">MILLE&amp;UNABAND SEMIFINALI @ Barrio&#8217;s Live</div>
     
-    <div class="card-venue">Barrio&#8217;s Live</div>
-    <div class="card-address">Piazza Donne Partigiane</div>
+    
+    <div class="card-description">&lt;p&gt;MILLE&amp;UNABAND · SEMIFINALI Mercoledì 1 Aprile 2026 · Barrio\'s Live · Milano Dalle 20:00 · Ingresso libero Si alza il livello. Le migliori band della stagione si sfidano per un ...&lt;/p&gt;\n</div>
+    
+    <div class="card-meta">
+      <div class="card-venue">Locale: <span>Barrio&#8217;s Live</span></div>
+      <div class="card-address">Piazza Donne Partigiane</div>
+    </div>
     <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://www.barrios.it/event/milleunaband-semifinali-barrios-live-1aprile/" target="_blank">Dettagli</a>
+    <a class="card-link" href="https://www.barrios.it/event/milleunaband-semifinali-barrios-live-1aprile/" target="_blank">Dettagli &rarr;</a>
   </div>
 
-  <div class="card" data-search="marta del grandi marta del grandi arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-01-04 &bull; ore 21:00</div>
+
+  <div class="card" data-search="marta del grandi marta del grandi arci bellezza live music &lt;p&gt;marta del grandi torna dal vivo con il suo nuovo disco &quot;dream life&quot;, uno spettacolo intimo e visionario, un viaggio poetico e ironico che nasce da una consapevolezza semplice: non possiamo controllare il futuro, ma possiamo abitare pienamente il presente&lt;/p&gt;\n">
+    <div class="card-score-bar" style="width: 50%"></div>
+    <div class="card-rank">#2</div>
+    <div class="card-date">
+      2026-01-04 &bull; ore 21:00
+    </div>
     <div class="card-title">MARTA DEL GRANDI</div>
     
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
+    
+    <div class="card-description">&lt;p&gt;Marta Del Grandi torna dal vivo con il suo nuovo disco &quot;Dream Life&quot;, uno spettacolo intimo e visionario, un viaggio poetico e ironico che nasce da una consapevolezza semplice: non possiamo controllare il futuro, ma possiamo abitare pienamente il presente&lt;/p&gt;\n</div>
+    
+    <div class="card-meta">
+      <div class="card-venue">Locale: <span>Arci Bellezza</span></div>
+      <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
+    </div>
     <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/marta-del-grandi-2/" target="_blank">Dettagli</a>
+    <a class="card-link" href="https://arcibellezza.it/evento/marta-del-grandi-2/" target="_blank">Dettagli &rarr;</a>
   </div>
 
-  <div class="card" data-search="godblesscomputers godblesscomputers arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-02-04 &bull; ore 21:00</div>
+
+  <div class="card" data-search="presentazione del libro &#8220;ballare nella catastrofe&#8221; presentazione del libro &#8220;ballare nella catastrofe&#8221; arci bellezza live music &lt;p&gt;&quot;𝐵𝑎𝑙𝑙𝑎𝑟𝑒 𝑛𝑒𝑙𝑙𝑎 𝐶𝑎𝑡𝑎𝑠𝑡𝑟𝑜𝑓𝑒&quot; 𝑒̀ 𝑢𝑛 𝑙𝑖𝑏𝑟𝑜 𝑐ℎ𝑒 𝑠𝑖 𝑐𝑜𝑚𝑝𝑜𝑛𝑒 𝑠𝑜𝑝𝑟𝑎𝑡𝑡𝑢𝑡𝑡𝑜 𝑑𝑖 𝑢𝑛𝑎 𝑝𝑎𝑟𝑡𝑒 𝑝𝑜𝑒𝑡𝑖𝑐𝑎 𝑙𝑎 𝑐𝑢𝑖 𝑔𝑒𝑛𝑒𝑠𝑖 𝑖𝑛𝑖𝑧𝑖𝑎 𝑛𝑒𝑔𝑙𝑖 𝑎𝑛𝑛𝑖 \'80 𝑒 \'90; 𝑔𝑙𝑖 𝑠𝑐𝑟𝑖𝑡𝑡𝑖 𝑖𝑛 𝑞𝑢𝑒𝑠𝑡𝑖𝑜𝑛𝑒 𝑒𝑏𝑏𝑒𝑟𝑜 𝑎𝑙 𝑡𝑒𝑚𝑝𝑜 𝑠𝑜𝑙𝑜 𝑢𝑛𝑎 𝑣𝑖𝑡𝑎 𝑜𝑟𝑎𝑙𝑒 𝑖𝑛 𝑑𝑖𝑣𝑒𝑟𝑠𝑖 𝑙𝑜𝑐𝑎𝑙𝑖 𝑑𝑖 𝑀𝑖𝑙𝑎𝑛𝑜 𝑑𝑜𝑣𝑒 𝑓𝑎𝑐𝑒𝑣𝑎𝑚𝑜 𝑠𝑝𝑜𝑘𝑒𝑛 𝑤𝑜𝑟𝑑&lt;/p&gt;\n">
+    <div class="card-score-bar" style="width: 50%"></div>
+    <div class="card-rank">#3</div>
+    <div class="card-date">
+      2026-02-04 &bull; ore 19:30
+    </div>
+    <div class="card-title">PRESENTAZIONE DEL LIBRO &#8220;BALLARE NELLA CATASTROFE&#8221;</div>
+    
+    
+    <div class="card-description">&lt;p&gt;&quot;𝐵𝑎𝑙𝑙𝑎𝑟𝑒 𝑛𝑒𝑙𝑙𝑎 𝐶𝑎𝑡𝑎𝑠𝑡𝑟𝑜𝑓𝑒&quot; 𝑒̀ 𝑢𝑛 𝑙𝑖𝑏𝑟𝑜 𝑐ℎ𝑒 𝑠𝑖 𝑐𝑜𝑚𝑝𝑜𝑛𝑒 𝑠𝑜𝑝𝑟𝑎𝑡𝑡𝑢𝑡𝑡𝑜 𝑑𝑖 𝑢𝑛𝑎 𝑝𝑎𝑟𝑡𝑒 𝑝𝑜𝑒𝑡𝑖𝑐𝑎 𝑙𝑎 𝑐𝑢𝑖 𝑔𝑒𝑛𝑒𝑠𝑖 𝑖𝑛𝑖𝑧𝑖𝑎 𝑛𝑒𝑔𝑙𝑖 𝑎𝑛𝑛𝑖 \'80 𝑒 \'90; 𝑔𝑙𝑖 𝑠𝑐𝑟𝑖𝑡𝑡𝑖 𝑖𝑛 𝑞𝑢𝑒𝑠𝑡𝑖𝑜𝑛𝑒 𝑒𝑏𝑏𝑒𝑟𝑜 𝑎𝑙 𝑡𝑒𝑚𝑝𝑜 𝑠𝑜𝑙𝑜 𝑢𝑛𝑎 𝑣𝑖𝑡𝑎 𝑜𝑟𝑎𝑙𝑒 𝑖𝑛 𝑑𝑖𝑣𝑒𝑟𝑠𝑖 𝑙𝑜𝑐𝑎𝑙𝑖 𝑑𝑖 𝑀𝑖𝑙𝑎𝑛𝑜 𝑑𝑜𝑣𝑒 𝑓𝑎𝑐𝑒𝑣𝑎𝑚𝑜 𝑠𝑝𝑜𝑘𝑒𝑛 𝑤𝑜𝑟𝑑&lt;/p&gt;\n</div>
+    
+    <div class="card-meta">
+      <div class="card-venue">Locale: <span>Arci Bellezza</span></div>
+      <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
+    </div>
+    <div class="tags"><span class="tag">live music</span></div>
+    <a class="card-link" href="https://arcibellezza.it/evento/presentazione-del-libro-ballare-nella-catastrofe/" target="_blank">Dettagli &rarr;</a>
+  </div>
+
+
+  <div class="card" data-search="godblesscomputers godblesscomputers arci bellezza live music &lt;p&gt;lorenzo nada è godblesscomputers. si forma come beat maker, producer e dj, mosso da una precoce passione per i campionatori e per i vinili&lt;/p&gt;\n">
+    <div class="card-score-bar" style="width: 50%"></div>
+    <div class="card-rank">#4</div>
+    <div class="card-date">
+      2026-02-04 &bull; ore 21:00
+    </div>
     <div class="card-title">GODBLESSCOMPUTERS</div>
     
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
+    
+    <div class="card-description">&lt;p&gt;Lorenzo Nada è Godblesscomputers. Si forma come beat maker, producer e dj, mosso da una precoce passione per i campionatori e per i vinili&lt;/p&gt;\n</div>
+    
+    <div class="card-meta">
+      <div class="card-venue">Locale: <span>Arci Bellezza</span></div>
+      <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
+    </div>
     <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/godblesscomputers-2/" target="_blank">Dettagli</a>
+    <a class="card-link" href="https://arcibellezza.it/evento/godblesscomputers-2/" target="_blank">Dettagli &rarr;</a>
   </div>
 
-  <div class="card" data-search="sharp pins sharp pins arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-02-23 &bull; ore 21:00</div>
+
+  <div class="card" data-search="sharp pins sharp pins arci bellezza live music &lt;p&gt;sharp pins, progetto lo-fi pop di kai slater (k records, chicago), tra le realtà più fresche e vitali della nuova scena indipendente americana - arrivano finalmente in italia&lt;/p&gt;\n">
+    <div class="card-score-bar" style="width: 50%"></div>
+    <div class="card-rank">#5</div>
+    <div class="card-date">
+      2026-02-23 &bull; ore 21:00
+    </div>
     <div class="card-title">SHARP PINS</div>
     
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
+    
+    <div class="card-description">&lt;p&gt;Sharp Pins, progetto lo-fi pop di Kai Slater (K Records, Chicago), tra le realtà più fresche e vitali della nuova scena indipendente americana - arrivano finalmente in Italia&lt;/p&gt;\n</div>
+    
+    <div class="card-meta">
+      <div class="card-venue">Locale: <span>Arci Bellezza</span></div>
+      <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
+    </div>
     <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/sharp-pins/" target="_blank">Dettagli</a>
+    <a class="card-link" href="https://arcibellezza.it/evento/sharp-pins/" target="_blank">Dettagli &rarr;</a>
   </div>
 
-  <div class="card" data-search="martedì in jazz martedì in jazz arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-02-24 &bull; ore 21:30</div>
+
+  <div class="card" data-search="martedì in jazz martedì in jazz arci bellezza live music &lt;p&gt;come ogni ultimo martedì del mese continua la stagione con gli appuntamenti presso il circolo arci bellezza a cura dell\'associazione jazz@milano e la jam session jazz e open stage&lt;/p&gt;\n">
+    <div class="card-score-bar" style="width: 50%"></div>
+    <div class="card-rank">#6</div>
+    <div class="card-date">
+      2026-02-24 &bull; ore 21:30
+    </div>
     <div class="card-title">MARTEDÌ IN JAZZ</div>
     
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
+    
+    <div class="card-description">&lt;p&gt;Come ogni ultimo Martedì del mese continua la stagione con gli appuntamenti presso il Circolo Arci Bellezza a cura dell\'Associazione Jazz@Milano e la Jam Session Jazz e Open Stage&lt;/p&gt;\n</div>
+    
+    <div class="card-meta">
+      <div class="card-venue">Locale: <span>Arci Bellezza</span></div>
+      <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
+    </div>
     <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/martedi-in-jazz/" target="_blank">Dettagli</a>
+    <a class="card-link" href="https://arcibellezza.it/evento/martedi-in-jazz/" target="_blank">Dettagli &rarr;</a>
   </div>
 
-  <div class="card" data-search="alessandro arcodia: poveri sinistrati alessandro arcodia: poveri sinistrati arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-02-26 &bull; ore 21:00</div>
+
+  <div class="card" data-search="alessandro arcodia: poveri sinistrati alessandro arcodia: poveri sinistrati arci bellezza live music &lt;p&gt;performer e reporter, premio satira forte dei marmi 2024. fin dalla prima puntata è nel cast fisso di &quot;splendida cornice&quot; di geppi cucciari con i suoi irriverenti reportage dalla nostra bella italia e non solo&lt;/p&gt;\n">
+    <div class="card-score-bar" style="width: 50%"></div>
+    <div class="card-rank">#7</div>
+    <div class="card-date">
+      2026-02-26 &bull; ore 21:00
+    </div>
     <div class="card-title">ALESSANDRO ARCODIA: POVERI SINISTRATI</div>
     
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
+    
+    <div class="card-description">&lt;p&gt;Performer e reporter, premio Satira Forte dei Marmi 2024. Fin dalla prima puntata è nel cast fisso di &quot;Splendida Cornice&quot; di Geppi Cucciari con i suoi irriverenti reportage dalla nostra bella Italia e non solo&lt;/p&gt;\n</div>
+    
+    <div class="card-meta">
+      <div class="card-venue">Locale: <span>Arci Bellezza</span></div>
+      <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
+    </div>
     <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/alessandro-arcodia-poveri-sinistrati/" target="_blank">Dettagli</a>
+    <a class="card-link" href="https://arcibellezza.it/evento/alessandro-arcodia-poveri-sinistrati/" target="_blank">Dettagli &rarr;</a>
   </div>
 
-  <div class="card" data-search="sanremo bellezza sanremo bellezza arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-02-27 &bull; ore 20:00</div>
+
+  <div class="card" data-search="sanremo bellezza sanremo bellezza arci bellezza live music &lt;p&gt;dopo il tutto esaurito delle ultime edizioni, anche per il 2026 sanremo bellezza raddoppia e vi aspetta nelle serate di venerdì e sabato: facciamo festa con il tradizionale evento di gruppo presentato dall\'orchestra disco pianobar&lt;/p&gt;\n">
+    <div class="card-score-bar" style="width: 50%"></div>
+    <div class="card-rank">#8</div>
+    <div class="card-date">
+      2026-02-27 &bull; ore 20:00
+    </div>
     <div class="card-title">SANREMO BELLEZZA</div>
     
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
+    
+    <div class="card-description">&lt;p&gt;Dopo il tutto esaurito delle ultime edizioni, anche per il 2026 Sanremo Bellezza raddoppia e vi aspetta nelle serate di Venerdì e Sabato: facciamo festa con il tradizionale evento di gruppo presentato dall\'Orchestra Disco Pianobar&lt;/p&gt;\n</div>
+    
+    <div class="card-meta">
+      <div class="card-venue">Locale: <span>Arci Bellezza</span></div>
+      <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
+    </div>
     <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/sanremo-bellezza/" target="_blank">Dettagli</a>
+    <a class="card-link" href="https://arcibellezza.it/evento/sanremo-bellezza/" target="_blank">Dettagli &rarr;</a>
   </div>
 
-  <div class="card" data-search="sanremo bellezza sanremo bellezza arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-02-28 &bull; ore 20:00</div>
+
+  <div class="card" data-search="sanremo bellezza sanremo bellezza arci bellezza live music &lt;p&gt;dopo il tutto esaurito delle ultime edizioni, anche per il 2026 sanremo bellezza raddoppia e vi aspetta nelle serate di venerdì e sabato: facciamo festa con il tradizionale evento di gruppo presentato dall\'orchestra disco pianobar&lt;/p&gt;\n">
+    <div class="card-score-bar" style="width: 50%"></div>
+    <div class="card-rank">#9</div>
+    <div class="card-date">
+      2026-02-28 &bull; ore 20:00
+    </div>
     <div class="card-title">SANREMO BELLEZZA</div>
     
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
+    
+    <div class="card-description">&lt;p&gt;Dopo il tutto esaurito delle ultime edizioni, anche per il 2026 Sanremo Bellezza raddoppia e vi aspetta nelle serate di Venerdì e Sabato: facciamo festa con il tradizionale evento di gruppo presentato dall\'Orchestra Disco Pianobar&lt;/p&gt;\n</div>
+    
+    <div class="card-meta">
+      <div class="card-venue">Locale: <span>Arci Bellezza</span></div>
+      <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
+    </div>
     <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/sanremo-bellezza-2/" target="_blank">Dettagli</a>
+    <a class="card-link" href="https://arcibellezza.it/evento/sanremo-bellezza-2/" target="_blank">Dettagli &rarr;</a>
   </div>
 
-  <div class="card" data-search="kxllmaurx live @ barrio&#8217;s live kxllmaurx live @ barrio&#8217;s live barrio&#8217;s live live music" data-genres="live music">
-    <div class="card-date">2026-03-04 &bull; ore 20:30</div>
+
+  <div class="card" data-search="kxllmaurx live @ barrio&#8217;s live kxllmaurx live @ barrio&#8217;s live barrio&#8217;s live live music &lt;p&gt;kxllmaurx · live a milano venerdì 3 aprile 2026 · barrio\'s live · milano apertura porte 20:30 · ingresso 10€ il primo concerto di kxllmaurx a milano. sul palco del ...&lt;/p&gt;\n">
+    <div class="card-score-bar" style="width: 50%"></div>
+    <div class="card-rank">#10</div>
+    <div class="card-date">
+      2026-03-04 &bull; ore 20:30
+    </div>
     <div class="card-title">KXLLMAURX LIVE @ Barrio&#8217;s Live</div>
     
-    <div class="card-venue">Barrio&#8217;s Live</div>
-    <div class="card-address">Piazza Donne Partigiane</div>
+    
+    <div class="card-description">&lt;p&gt;KXLLMAURX · LIVE A MILANO Venerdì 3 Aprile 2026 · Barrio\'s Live · Milano Apertura porte 20:30 · Ingresso 10€ Il primo concerto di KXLLMAURX a Milano. Sul palco del ...&lt;/p&gt;\n</div>
+    
+    <div class="card-meta">
+      <div class="card-venue">Locale: <span>Barrio&#8217;s Live</span></div>
+      <div class="card-address">Piazza Donne Partigiane</div>
+    </div>
     <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://www.barrios.it/event/kxllmaurx-live-barrios-live/" target="_blank">Dettagli</a>
+    <a class="card-link" href="https://www.barrios.it/event/kxllmaurx-live-barrios-live/" target="_blank">Dettagli &rarr;</a>
   </div>
 
-  <div class="card" data-search="milano canta rino gaetano milano canta rino gaetano arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-03-13 &bull; ore 21:00</div>
+
+  <div class="card" data-search="milano canta rino gaetano milano canta rino gaetano arci bellezza live music &lt;p&gt;rino gaetano è autore di canzoni graffianti e appassionate, paladino del sud e degli sfruttati, nemico giurato di tutti i politici: uno dei songwriter di culto della scena italiana&lt;/p&gt;\n">
+    <div class="card-score-bar" style="width: 50%"></div>
+    <div class="card-rank">#11</div>
+    <div class="card-date">
+      2026-03-13 &bull; ore 21:00
+    </div>
     <div class="card-title">MILANO CANTA RINO GAETANO</div>
     
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
+    
+    <div class="card-description">&lt;p&gt;Rino Gaetano è autore di canzoni graffianti e appassionate, paladino del Sud e degli sfruttati, nemico giurato di tutti i politici: uno dei songwriter di culto della scena italiana&lt;/p&gt;\n</div>
+    
+    <div class="card-meta">
+      <div class="card-venue">Locale: <span>Arci Bellezza</span></div>
+      <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
+    </div>
     <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/milano-canta-rino-gaetano/" target="_blank">Dettagli</a>
+    <a class="card-link" href="https://arcibellezza.it/evento/milano-canta-rino-gaetano/" target="_blank">Dettagli &rarr;</a>
   </div>
 
-  <div class="card" data-search="sblocca ricordi: il party dove tu scegli le canzoni sblocca ricordi: il party dove tu scegli le canzoni arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-03-13 &bull; ore 22:00</div>
+
+  <div class="card" data-search="sblocca ricordi: il party dove tu scegli le canzoni sblocca ricordi: il party dove tu scegli le canzoni arci bellezza live music &lt;p&gt;torna a grande richiesta ad arci bellezza la serata dove scegliamo, cantiamo e balliamo insieme le canzoni che sbloccano i tuoi ricordi più belli: un viaggio con gli amici, la prima volta, il ritorno a casa!&lt;/p&gt;\n">
+    <div class="card-score-bar" style="width: 50%"></div>
+    <div class="card-rank">#12</div>
+    <div class="card-date">
+      2026-03-13 &bull; ore 22:00
+    </div>
     <div class="card-title">SBLOCCA RICORDI: IL PARTY DOVE TU SCEGLI LE CANZONI</div>
     
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
+    
+    <div class="card-description">&lt;p&gt;Torna a grande richiesta ad Arci Bellezza la serata dove scegliamo, cantiamo e balliamo insieme le canzoni che sbloccano i tuoi ricordi più belli: un viaggio con gli amici, la prima volta, il ritorno a casa!&lt;/p&gt;\n</div>
+    
+    <div class="card-meta">
+      <div class="card-venue">Locale: <span>Arci Bellezza</span></div>
+      <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
+    </div>
     <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/sblocca-ricordi-il-party-dove-tu-scegli-le-canzoni/" target="_blank">Dettagli</a>
+    <a class="card-link" href="https://arcibellezza.it/evento/sblocca-ricordi-il-party-dove-tu-scegli-le-canzoni/" target="_blank">Dettagli &rarr;</a>
   </div>
 
-  <div class="card" data-search="laguna bollente laguna bollente arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-03-14 &bull; ore 21:00</div>
+
+  <div class="card" data-search="laguna bollente laguna bollente arci bellezza live music &lt;p&gt;laguna bollente è il duo di musicisti composto da dunia maccagni e elia fabbro, entrambi di base nella serenissima. emersi dalla scena post-punk veneta, hanno all\'attivo due ep dal titolo &quot;discocesso&quot; e &quot;nord sud ovest sert&quot;&lt;/p&gt;\n">
+    <div class="card-score-bar" style="width: 50%"></div>
+    <div class="card-rank">#13</div>
+    <div class="card-date">
+      2026-03-14 &bull; ore 21:00
+    </div>
     <div class="card-title">LAGUNA BOLLENTE</div>
     
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
+    
+    <div class="card-description">&lt;p&gt;Laguna Bollente è il duo di musicisti composto da Dunia Maccagni e Elia Fabbro, entrambi di base nella Serenissima. Emersi dalla scena post-punk veneta, hanno all\'attivo due EP dal titolo &quot;DISCOCESSO&quot; e &quot;NORD SUD OVEST SERT&quot;&lt;/p&gt;\n</div>
+    
+    <div class="card-meta">
+      <div class="card-venue">Locale: <span>Arci Bellezza</span></div>
+      <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
+    </div>
     <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/laguna-bollente/" target="_blank">Dettagli</a>
+    <a class="card-link" href="https://arcibellezza.it/evento/laguna-bollente/" target="_blank">Dettagli &rarr;</a>
   </div>
 
-  <div class="card" data-search="la disco 70-80 la disco 70-80 arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-03-14 &bull; ore 22:00</div>
+
+  <div class="card" data-search="la disco 70-80 la disco 70-80 arci bellezza live music &lt;p&gt;ebbene sì, ci siamo ancora, con un nuovo speciale appuntamento: la disco settanta ottanta continua a impadronirsi per una notte al mese del salone dello storico circolo arci bellezza di milano!&lt;/p&gt;\n">
+    <div class="card-score-bar" style="width: 50%"></div>
+    <div class="card-rank">#14</div>
+    <div class="card-date">
+      2026-03-14 &bull; ore 22:00
+    </div>
     <div class="card-title">LA DISCO 70-80</div>
     
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
+    
+    <div class="card-description">&lt;p&gt;Ebbene sì, ci siamo ancora, con un nuovo speciale appuntamento: la Disco Settanta Ottanta continua a impadronirsi per una notte al mese del salone dello storico circolo Arci Bellezza di Milano!&lt;/p&gt;\n</div>
+    
+    <div class="card-meta">
+      <div class="card-venue">Locale: <span>Arci Bellezza</span></div>
+      <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
+    </div>
     <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/la-disco-70-80-18/" target="_blank">Dettagli</a>
+    <a class="card-link" href="https://arcibellezza.it/evento/la-disco-70-80-18/" target="_blank">Dettagli &rarr;</a>
   </div>
 
-  <div class="card" data-search="malena zavala malena zavala arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-03-15 &bull; ore 21:00</div>
+
+  <div class="card" data-search="malena zavala malena zavala arci bellezza live music &lt;p&gt;il suo nuovo album &quot;if this life could start again&quot; è una dichiarazione profonda di resilienza, che riecheggia i vasti paesaggi delle sue radici: un viaggio trasformativo di guarigione, strutturato come un\'ascesa in montagna, che attraversa il folk e il synth-pop fino ad arrivare">
+    <div class="card-score-bar" style="width: 50%"></div>
+    <div class="card-rank">#15</div>
+    <div class="card-date">
+      2026-03-15 &bull; ore 21:00
+    </div>
     <div class="card-title">MALENA ZAVALA</div>
     
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
+    
+    <div class="card-description">&lt;p&gt;Il suo nuovo album &quot;If This Life Could Start Again&quot; è una dichiarazione profonda di resilienza, che riecheggia i vasti paesaggi delle sue radici: un viaggio trasformativo di guarigione, strutturato come un\'ascesa in montagna, che attraversa il folk e il synth-pop fino ad arrivare</div>
+    
+    <div class="card-meta">
+      <div class="card-venue">Locale: <span>Arci Bellezza</span></div>
+      <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
+    </div>
     <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/malena-zavala/" target="_blank">Dettagli</a>
+    <a class="card-link" href="https://arcibellezza.it/evento/malena-zavala/" target="_blank">Dettagli &rarr;</a>
   </div>
 
-  <div class="card" data-search="omini + cordio omini + cordio arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-03-16 &bull; ore 20:30</div>
+
+  <div class="card" data-search="omini + cordio omini + cordio arci bellezza live music &lt;p&gt;gli omini sono julian loggia al basso e alla voce, zak loggia alla chitarra e ai cori e mattia fratucelli alla batteria. nascono nel 2015 come the minis, facendosi conoscere con questo nome fino al 2021&lt;/p&gt;\n">
+    <div class="card-score-bar" style="width: 50%"></div>
+    <div class="card-rank">#16</div>
+    <div class="card-date">
+      2026-03-16 &bull; ore 20:30
+    </div>
     <div class="card-title">OMINI + CORDIO</div>
     
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
+    
+    <div class="card-description">&lt;p&gt;Gli Omini sono Julian Loggia al basso e alla voce, Zak Loggia alla chitarra e ai cori e Mattia Fratucelli alla batteria. Nascono nel 2015 come The Minis, facendosi conoscere con questo nome fino al 2021&lt;/p&gt;\n</div>
+    
+    <div class="card-meta">
+      <div class="card-venue">Locale: <span>Arci Bellezza</span></div>
+      <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
+    </div>
     <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/omini-cordio/" target="_blank">Dettagli</a>
+    <a class="card-link" href="https://arcibellezza.it/evento/omini-cordio/" target="_blank">Dettagli &rarr;</a>
   </div>
 
-  <div class="card" data-search="atlante + soft boys club atlante + soft boys club arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-03-17 &bull; ore 21:00</div>
+
+  <div class="card" data-search="atlante + soft boys club atlante + soft boys club arci bellezza live music &lt;p&gt;il loro sound fonde rock alternativo, suggestioni elettroniche e atmosfere post-rock, dando vita a brani intensi e stratificati, accompagnati da testi in italiano che indagano la crescita interiore, le paure e le dinamiche relazionali&lt;/p&gt;\n">
+    <div class="card-score-bar" style="width: 50%"></div>
+    <div class="card-rank">#17</div>
+    <div class="card-date">
+      2026-03-17 &bull; ore 21:00
+    </div>
     <div class="card-title">ATLANTE + SOFT BOYS CLUB</div>
     
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
+    
+    <div class="card-description">&lt;p&gt;Il loro sound fonde rock alternativo, suggestioni elettroniche e atmosfere post-rock, dando vita a brani intensi e stratificati, accompagnati da testi in italiano che indagano la crescita interiore, le paure e le dinamiche relazionali&lt;/p&gt;\n</div>
+    
+    <div class="card-meta">
+      <div class="card-venue">Locale: <span>Arci Bellezza</span></div>
+      <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
+    </div>
     <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/atlante/" target="_blank">Dettagli</a>
+    <a class="card-link" href="https://arcibellezza.it/evento/atlante/" target="_blank">Dettagli &rarr;</a>
   </div>
 
-  <div class="card" data-search="españa circo este españa circo este arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-03-18 &bull; ore 21:00</div>
+
+  <div class="card" data-search="españa circo este españa circo este arci bellezza live music &lt;p&gt;gli españa circo este hanno alle spalle più di 700 concerti tra italia, europa e america, confermandosi come una delle realtà più dinamiche e travolgenti della scena musicale indipendente&lt;/p&gt;\n">
+    <div class="card-score-bar" style="width: 50%"></div>
+    <div class="card-rank">#18</div>
+    <div class="card-date">
+      2026-03-18 &bull; ore 21:00
+    </div>
     <div class="card-title">ESPAÑA CIRCO ESTE</div>
     
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
+    
+    <div class="card-description">&lt;p&gt;Gli España Circo Este hanno alle spalle più di 700 concerti tra Italia, Europa e America, confermandosi come una delle realtà più dinamiche e travolgenti della scena musicale indipendente&lt;/p&gt;\n</div>
+    
+    <div class="card-meta">
+      <div class="card-venue">Locale: <span>Arci Bellezza</span></div>
+      <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
+    </div>
     <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/espana-circo-este-2/" target="_blank">Dettagli</a>
+    <a class="card-link" href="https://arcibellezza.it/evento/espana-circo-este-2/" target="_blank">Dettagli &rarr;</a>
   </div>
 
-  <div class="card" data-search="trio mandili trio mandili arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-03-19 &bull; ore 20:30</div>
+
+  <div class="card" data-search="trio mandili trio mandili arci bellezza live music &lt;p&gt;una band che è una moderna fiaba caucasica, dove la polifonia tradizionale georgiana è eseguita con delicatezza senza eguali da un trio di voci femminili magiche, come ruscelli che scendono dalle montagne e penetrano nel cuore&lt;/p&gt;\n">
+    <div class="card-score-bar" style="width: 50%"></div>
+    <div class="card-rank">#19</div>
+    <div class="card-date">
+      2026-03-19 &bull; ore 20:30
+    </div>
     <div class="card-title">TRIO MANDILI</div>
     
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
+    
+    <div class="card-description">&lt;p&gt;Una band che è una moderna fiaba caucasica, dove la polifonia tradizionale georgiana è eseguita con delicatezza senza eguali da un trio di voci femminili magiche, come ruscelli che scendono dalle montagne e penetrano nel cuore&lt;/p&gt;\n</div>
+    
+    <div class="card-meta">
+      <div class="card-venue">Locale: <span>Arci Bellezza</span></div>
+      <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
+    </div>
     <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/trio-mandili/" target="_blank">Dettagli</a>
+    <a class="card-link" href="https://arcibellezza.it/evento/trio-mandili/" target="_blank">Dettagli &rarr;</a>
   </div>
 
-  <div class="card" data-search="sold out &#8211; prima stanza a destra sold out &#8211; prima stanza a destra arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-03-20 &bull; ore 21:00</div>
+
+  <div class="card" data-search="sold out &#8211; prima stanza a destra sold out &#8211; prima stanza a destra arci bellezza live music &lt;p&gt;il primo tour nei club di prima stanza a destra è realtà. milano, bologna, roma e napoli. quattro serate imperdibili in cui il pubblico potrà immergersi nelle atmosfere magnetiche create dall\'artista.&lt;/p&gt;\n">
+    <div class="card-score-bar" style="width: 50%"></div>
+    <div class="card-rank">#20</div>
+    <div class="card-date">
+      2026-03-20 &bull; ore 21:00
+    </div>
     <div class="card-title">SOLD OUT &#8211; PRIMA STANZA A DESTRA</div>
     
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/prima-stanza-a-destra/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="viva woodstock! flower party viva woodstock! flower party arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-03-20 &bull; ore 22:00</div>
-    <div class="card-title">VIVA WOODSTOCK! FLOWER PARTY</div>
     
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/viva-woodstock-flower-party/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="bologna violenta bologna violenta arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-03-21 &bull; ore 20:30</div>
-    <div class="card-title">BOLOGNA VIOLENTA</div>
+    <div class="card-description">&lt;p&gt;Il primo tour nei club di prima stanza a destra è realtà. Milano, Bologna, Roma e Napoli. Quattro serate imperdibili in cui il pubblico potrà immergersi nelle atmosfere magnetiche create dall\'artista.&lt;/p&gt;\n</div>
     
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
+    <div class="card-meta">
+      <div class="card-venue">Locale: <span>Arci Bellezza</span></div>
+      <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
+    </div>
     <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/bologna-violenta/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="druga / ghando druga / ghando arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-03-22 &bull; ore 21:00</div>
-    <div class="card-title">DRUGA / GHANDO</div>
-    
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/druga-ghando/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="deadletter deadletter arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-03-23 &bull; ore 20:30</div>
-    <div class="card-title">DEADLETTER</div>
-    
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/deadletter-3/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="neoprimitivi + pan dan neoprimitivi + pan dan arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-03-24 &bull; ore 20:30</div>
-    <div class="card-title">NEOPRIMITIVI + PAN DAN</div>
-    
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/neoprimitivi-pan-dan/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="mille &amp; una band @ barrio’s live mille &amp; una band @ barrio’s live barrio&#8217;s live live music" data-genres="live music">
-    <div class="card-date">2026-03-25 &bull; ore 19:30</div>
-    <div class="card-title">MILLE &amp; UNA BAND @ Barrio’s Live</div>
-    
-    <div class="card-venue">Barrio&#8217;s Live</div>
-    <div class="card-address">Piazza Donne Partigiane</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://www.barrios.it/event/mille-una-band-barrios-live-25-marzo/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="sold out &#8211; sprints sold out &#8211; sprints arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-03-25 &bull; ore 21:00</div>
-    <div class="card-title">SOLD OUT &#8211; SPRINTS</div>
-    
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/sprints/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="sheroes &#8211; presentazione del libro sheroes &#8211; presentazione del libro arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-03-26 &bull; ore 19:30</div>
-    <div class="card-title">SHEROES &#8211; PRESENTAZIONE DEL LIBRO</div>
-    
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/sheroes-presentazione-del-libro/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="ivisionatici music festival v ed @ barrio&#8217;s live ivisionatici music festival v ed @ barrio&#8217;s live barrio&#8217;s live live music" data-genres="live music">
-    <div class="card-date">2026-03-26 &bull; ore 20:00</div>
-    <div class="card-title">IVISIONATICI MUSIC FESTIVAL V ed @ Barrio&#8217;s Live</div>
-    
-    <div class="card-venue">Barrio&#8217;s Live</div>
-    <div class="card-address">Piazza Donne Partigiane</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://www.barrios.it/event/ivisionatici-music-festival-barrios-live-ivisionatici/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="marianne mirage marianne mirage arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-03-26 &bull; ore 21:00</div>
-    <div class="card-title">MARIANNE MIRAGE</div>
-    
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/marianne-mirage/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="david rodigan + vitowar djset david rodigan + vitowar djset arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-03-27 &bull; ore 21:00</div>
-    <div class="card-title">DAVID RODIGAN + VITOWAR DJSET</div>
-    
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/david-rodigan-vitowar-djset/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="messiness messiness arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-03-27 &bull; ore 22:00</div>
-    <div class="card-title">MESSINESS</div>
-    
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/messiness/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="1000€ battle @ barrio’s live 1000€ battle @ barrio’s live barrio&#8217;s live live music" data-genres="live music">
-    <div class="card-date">2026-03-28 &bull; ore 20:00</div>
-    <div class="card-title">1000€ BATTLE @ Barrio’s Live</div>
-    
-    <div class="card-venue">Barrio&#8217;s Live</div>
-    <div class="card-address">Piazza Donne Partigiane</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://www.barrios.it/event/1000e-battle-barrios-live-marzo/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="sold out &#8211; caroline sold out &#8211; caroline arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-03-28 &bull; ore 20:30</div>
-    <div class="card-title">SOLD OUT &#8211; CAROLINE</div>
-    
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/caroline/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="balera indie &#8211; karaoke + djset balera indie &#8211; karaoke + djset arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-03-28 &bull; ore 22:00</div>
-    <div class="card-title">BALERA INDIE &#8211; KARAOKE + DJSET</div>
-    
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/balera-indie-karaoke-djset-2/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="bloodycult | breaking battle vol. 1 bloodycult | breaking battle vol. 1 barrio&#8217;s live live music" data-genres="live music">
-    <div class="card-date">2026-03-29 &bull; ore 12:30</div>
-    <div class="card-title">BloodyCult | Breaking Battle Vol. 1</div>
-    
-    <div class="card-venue">Barrio&#8217;s Live</div>
-    <div class="card-address">Piazza Donne Partigiane</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://www.barrios.it/event/bloodycult-breaking-battle-vol-1/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="alosi alosi arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-03-29 &bull; ore 21:00</div>
-    <div class="card-title">ALOSI</div>
-    
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/alosi/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="dall&#8217;europa all&#8217;africa @ barrio&#8217;s live dall&#8217;europa all&#8217;africa @ barrio&#8217;s live barrio&#8217;s live live music" data-genres="live music">
-    <div class="card-date">2026-03-30 &bull; ore 19:30</div>
-    <div class="card-title">DALL&#8217;EUROPA ALL&#8217;AFRICA @ Barrio&#8217;s Live</div>
-    
-    <div class="card-venue">Barrio&#8217;s Live</div>
-    <div class="card-address">Piazza Donne Partigiane</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://www.barrios.it/event/dalleuropa-allafrica-barrios-live/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="bianco bianco arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-03-30 &bull; ore 21:00</div>
-    <div class="card-title">BIANCO</div>
-    
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/bianco-2/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="mille&amp;unaband @ barrio&#8217;s live mille&amp;unaband @ barrio&#8217;s live barrio&#8217;s live live music" data-genres="live music">
-    <div class="card-date">2026-03-31 &bull; ore 20:00</div>
-    <div class="card-title">MILLE&amp;UNABAND @ Barrio&#8217;s Live</div>
-    
-    <div class="card-venue">Barrio&#8217;s Live</div>
-    <div class="card-address">Piazza Donne Partigiane</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://www.barrios.it/event/milleunaband-barrios-live-31-marzo/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="martedì in jazz martedì in jazz arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-03-31 &bull; ore 21:30</div>
-    <div class="card-title">MARTEDÌ IN JAZZ</div>
-    
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/martedi-in-jazz-2/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="sold out &#8211; wavves sold out &#8211; wavves arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-04-03 &bull; ore 20:30</div>
-    <div class="card-title">SOLD OUT &#8211; WAVVES</div>
-    
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/wavves/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="moontell @ barrio&#8217;s live moontell @ barrio&#8217;s live barrio&#8217;s live live music" data-genres="live music">
-    <div class="card-date">2026-04-04 &bull; ore 20:00</div>
-    <div class="card-title">MOONTELL @ Barrio&#8217;s Live</div>
-    
-    <div class="card-venue">Barrio&#8217;s Live</div>
-    <div class="card-address">Piazza Donne Partigiane</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://www.barrios.it/event/moontell-barrios-live-aprile/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="avincola canta carella avincola canta carella arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-04-04 &bull; ore 21:00</div>
-    <div class="card-title">AVINCOLA CANTA CARELLA</div>
-    
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/avincola-canta-carella/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="la discoteca anni &#8217;90 by megamix la discoteca anni &#8217;90 by megamix arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-04-04 &bull; ore 22:00</div>
-    <div class="card-title">LA DISCOTECA ANNI &#8217;90 BY MEGAMIX</div>
-    
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/la-discoteca-anni-90-by-megamix-3/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="proiezione &#8220;we are making a film about mark fisher&#8221; proiezione &#8220;we are making a film about mark fisher&#8221; arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-05-03 &bull; ore 18:30</div>
-    <div class="card-title">PROIEZIONE &#8220;WE ARE MAKING A FILM ABOUT MARK FISHER&#8221;</div>
-    
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/proiezione-we-are-making-a-film-about-mark-fisher/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="milano canta battisti milano canta battisti arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-05-03 &bull; ore 21:00</div>
-    <div class="card-title">MILANO CANTA BATTISTI</div>
-    
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/milano-canta-battisti/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="ego ego arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-06-03 &bull; ore 21:00</div>
-    <div class="card-title">EGO</div>
-    
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/ego/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="simone marie djset x london calling &#8211; uk party simone marie djset x london calling &#8211; uk party arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-06-03 &bull; ore 22:00</div>
-    <div class="card-title">SIMONE MARIE DJSET X LONDON CALLING &#8211; UK PARTY</div>
-    
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/simone-marie-djset-x-london-calling-uk-party/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="sibode dj sibode dj arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-07-03 &bull; ore 21:00</div>
-    <div class="card-title">SIBODE DJ</div>
-    
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/sibode-dj-3/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="mai mai mai + torba mai mai mai + torba arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-07-03 &bull; ore 21:00</div>
-    <div class="card-title">MAI MAI MAI + TORBA</div>
-    
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/mai-mai-mai-torba/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="mille&amp;unaband @ barrio&#8217;s live mille&amp;unaband @ barrio&#8217;s live barrio&#8217;s live live music" data-genres="live music">
-    <div class="card-date">2026-07-04 &bull; ore 20:00</div>
-    <div class="card-title">MILLE&amp;UNABAND @ Barrio&#8217;s Live</div>
-    
-    <div class="card-venue">Barrio&#8217;s Live</div>
-    <div class="card-address">Piazza Donne Partigiane</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://www.barrios.it/event/milleunaband-barrios-live-7-aprile/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="svegliaginevra svegliaginevra arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-08-03 &bull; ore 21:00</div>
-    <div class="card-title">svegliaginevra</div>
-    
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/svegliaginevra-2/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="andrew faber andrew faber arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-09-03 &bull; ore 21:00</div>
-    <div class="card-title">ANDREW FABER</div>
-    
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/andrew-faber/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="l&#8217;ottava notte + elvira notari. oltre il silenzio l&#8217;ottava notte + elvira notari. oltre il silenzio arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-09-03 &bull; ore 21:00</div>
-    <div class="card-title">L&#8217;OTTAVA NOTTE + ELVIRA NOTARI. OLTRE IL SILENZIO</div>
-    
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/lottava-notte-elvira-notari-oltre-il-silenzio/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="oh he dead oh he dead arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-10-03 &bull; ore 21:00</div>
-    <div class="card-title">OH HE DEAD</div>
-    
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/oh-he-dead/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="angelo sicurella angelo sicurella arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-11-03 &bull; ore 21:00</div>
-    <div class="card-title">ANGELO SICURELLA</div>
-    
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/angelo-sicurella/" target="_blank">Dettagli</a>
-  </div>
-
-  <div class="card" data-search="sold out &#8211; nico arezzo sold out &#8211; nico arezzo arci bellezza live music" data-genres="live music">
-    <div class="card-date">2026-12-03 &bull; ore 21:00</div>
-    <div class="card-title">SOLD OUT &#8211; NICO AREZZO</div>
-    
-    <div class="card-venue">Arci Bellezza</div>
-    <div class="card-address">Via Giovanni Bellezza 16, Milano</div>
-    <div class="tags"><span class="tag">live music</span></div>
-    <a class="card-link" href="https://arcibellezza.it/evento/nico-arezzo/" target="_blank">Dettagli</a>
+    <a class="card-link" href="https://arcibellezza.it/evento/prima-stanza-a-destra/" target="_blank">Dettagli &rarr;</a>
   </div>
 
 </div>
-<footer>Aggiornato il 25/03/2026 13:17 &bull; Dati da Eventbrite, ViviMilano, Zero Milano e siti dei locali</footer>
+<footer>Aggiornato il 30/03/2026 13:10 &bull; Fonti: Eventbrite, ViviMilano, Zero Milano, locali diretti &bull; Ranking AI by Perplexity</footer>
 <script>
 function filterEvents() {
   const q = document.getElementById('search').value.toLowerCase();
-  const g = document.getElementById('genre-filter').value.toLowerCase();
   const cards = document.querySelectorAll('.card');
   let visible = 0;
   cards.forEach(c => {
-    const matchQ = !q || c.dataset.search.includes(q);
-    const matchG = !g || c.dataset.genres.toLowerCase().includes(g);
-    if (matchQ && matchG) { c.classList.remove('hidden'); visible++; }
-    else { c.classList.add('hidden'); }
+    const match = !q || c.dataset.search.includes(q);
+    c.classList.toggle('hidden', !match);
+    if (match) visible++;
   });
   document.getElementById('stats').textContent = 'Mostrando ' + visible + ' eventi';
 }
