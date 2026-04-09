@@ -7,7 +7,7 @@ BASE_URL = "https://2night.it"
 SOURCE_URL = "https://2night.it/milano/eventi.html"
 
 
-def collect():
+def collect_twonight(date_from=None,date_to=None):
     response = requests.get(
         SOURCE_URL,
         timeout=20,
