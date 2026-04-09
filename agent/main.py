@@ -9,6 +9,7 @@ from collectors.eventbrite import collect_eventbrite
 from collectors.vivimilano import collect_vivimilano
 from collectors.zero_milano import collect_zero_milano
 from collectors.venues import collect_venues
+from collectors.twonight import collect_twonight
 from normalizer import normalize_events, deduplicate
 from classifier import classify_genres
 from ranker import rank_events
@@ -50,6 +51,9 @@ def main():
 
     print("[Collector] Zero Milano...")
     raw_events += collect_zero_milano(DATE_FROM, DATE_TO)
+
+    print("[Collector] 2night...")
+    raw_events += collect_twonight(DATE_FROM, DATE_TO)
 
     print("[Collector] Locali singoli...")
     raw_events += collect_venues(DATE_FROM, DATE_TO)
